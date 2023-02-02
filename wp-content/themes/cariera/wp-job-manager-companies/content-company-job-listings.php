@@ -4,7 +4,7 @@
  * @package Cariera
  *
  * @since   1.5.5
- * @version 1.5.5
+ * @version 1.6.4
  *
  * ========================
  * COMPANY'S ACTIVE JOB LISTINGS
@@ -21,8 +21,8 @@ if ( $company_preview ) {
 	return;
 }
 
-$show_active = get_option( 'cariera_companies_per_page' );
-$companies   = cariera_get_the_company_job_listing( $post->ID, [ 'posts_per_page' => $show_active ] );
+$show_active = apply_filters( 'cariera_single_company_job_listings_per_page', get_option( 'cariera_companies_per_page' ) );
+$companies   = cariera_get_the_company_job_listing( $post->ID, [ 'posts_per_page' => $show_active, 'post_status' => 'publish' ] );
 
 
 if ( $companies->have_posts() ) {
@@ -35,9 +35,10 @@ if ( $companies->have_posts() ) {
 			<?php
 			while ( $companies->have_posts() ) :
 				$companies->the_post();
-				?>
-				<?php get_job_manager_template_part( 'job-templates/content', 'job_listing_list1' ); ?>
-			<?php endwhile; ?>
+
+				get_job_manager_template_part( 'job-templates/content', 'job_listing_list1' );
+			endwhile;
+			?>
 		</ul>
 	</div>
 

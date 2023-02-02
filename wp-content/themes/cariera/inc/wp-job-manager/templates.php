@@ -334,7 +334,7 @@ add_action( 'cariera_job_listing_actions', 'cariera_single_job_v2_expire', 11 );
  * Job Submission Flow
  *
  * @since   1.3.2
- * @version 1.5.2
+ * @version 1.6.4
  */
 function cariera_job_submission_flow() {
 	// Temporary variables.
@@ -342,7 +342,7 @@ function cariera_job_submission_flow() {
 
 	// Get page IDs.
 	$current_page_id     = get_queried_object_id();
-	$job_submission_page = intval( get_option( 'job_manager_submit_job_form_page_id', false ) );
+	$job_submission_page = apply_filters( 'cariera_dashboard_job_submit_page', get_option( 'job_manager_submit_job_form_page_id', false ) );
 
 	// Get job packages.
 	if ( function_exists( 'wc_get_products' ) ) {
@@ -352,7 +352,7 @@ function cariera_job_submission_flow() {
 	}
 
 	// Display submission flow.
-	if ( ! empty( $job_submission_page ) && ( $job_submission_page == $current_page_id ) ) {
+	if ( ! empty( $job_submission_page ) && ( absint( $job_submission_page ) === $current_page_id ) ) {
 		?>
 		<div class="submission-flow job-submission-flow">
 			<ul>

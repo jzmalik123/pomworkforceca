@@ -80,7 +80,7 @@ if ( 'preloader4' === $preloader_ver ) {
 	<div id="preloader" class="preloader4">
 		<div class="inner">
 			<div class="loading-container">
-				<img src="<?php echo esc_url( $logo ); ?>">
+				<img src="<?php echo esc_url( $logo ); ?>" alt="<?php esc_attr_e( 'Site logo', 'cariera' ); ?>">
 				<div id="object_one" class="object"></div>
 			</div>
 		</div>

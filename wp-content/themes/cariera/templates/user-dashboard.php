@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-wp_enqueue_style( 'cariera-dashboard', get_template_directory_uri() . '/assets/dist/css/dashboard.css', [], CARIERA_VERSION );
+wp_enqueue_style( 'cariera-dashboard' );
 
 
 // If user is not logged.

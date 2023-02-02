@@ -31,7 +31,7 @@ $results      = $notification->output();
 
 
 <div class="extra-menu-item extra-notifications">
-	<a href="#" id="notifications-trigger">
+	<a href="#" id="notifications-trigger" aria-label="<?php esc_attr_e( 'Notification trigger', 'cariera' ); ?>">
 		<i class="icon-bell"></i>
 
 		<?php if ( $active ) { ?>

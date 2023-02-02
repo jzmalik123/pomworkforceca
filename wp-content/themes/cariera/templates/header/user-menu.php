@@ -4,7 +4,7 @@
  * @package Cariera
  *
  * @since    1.5.4
- * @version  1.5.4
+ * @version  1.6.3
  *
  * ========================
  * TEMPLATE FOR USER MENU IN HEADER
@@ -16,17 +16,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
 $current_user        = wp_get_current_user();
 $user_id             = get_current_user_id();
 $user_img            = get_avatar( get_the_author_meta( 'ID', $user_id ), 40 );
 $dashboard_title     = get_page_by_title( 'Dashboard' );
-$dashboard_page      = get_option( 'cariera_dashboard_page' );
-$employer_dashboard  = get_option( 'job_manager_job_dashboard_page_id' );
-$company_dashboard   = get_option( 'cariera_company_dashboard_page' );
-$candidate_dashboard = get_option( 'resume_manager_candidate_dashboard_page_id' );
-$user_packages       = get_option( 'cariera_user_packages_page' );
-$profile             = get_option( 'cariera_dashboard_profile_page' );
+$dashboard_page      = apply_filters( 'cariera_user_menu_dashboard_page_id', get_option( 'cariera_dashboard_page' ) );
+$employer_dashboard  = apply_filters( 'cariera_user_menu_employer_dashboard_page_id', get_option( 'job_manager_job_dashboard_page_id' ) );
+$company_dashboard   = apply_filters( 'cariera_user_menu_company_dashboard_page_id', get_option( 'cariera_company_dashboard_page' ) );
+$candidate_dashboard = apply_filters( 'cariera_user_menu_candidate_dashboard_page_id', get_option( 'resume_manager_candidate_dashboard_page_id' ) );
+$user_packages       = apply_filters( 'cariera_user_menu_user_packages_page_id', get_option( 'cariera_user_packages_page' ) );
+$profile             = apply_filters( 'cariera_user_menu_profile_dashboard_page_id', get_option( 'cariera_dashboard_profile_page' ) );
 $roles               = $current_user->roles;
 $role                = array_shift( $roles );
 ?>
@@ -46,7 +45,7 @@ $role                = array_shift( $roles );
 	}
 	?>
 
-	<a href="#" id="user-account-extra">
+	<a href="#" id="user-account-extra" aria-label="<?php esc_attr_e( 'Header user account', 'cariera' ); ?>">
 		<div class="login-status"></div>
 		<span class="avatar-img">
 			<?php echo wp_kses_post( $user_img ); ?>
@@ -76,7 +75,7 @@ $role                = array_shift( $roles );
 				<?php
 				// Employer Dashboard Link.
 				if ( cariera_wp_job_manager_is_activated() ) {
-					if ( in_array( 'employer', (array) $current_user->roles ) || in_array( 'administrator', (array) $current_user->roles ) ) {
+					if ( in_array( 'employer', (array) $current_user->roles, true ) || in_array( 'administrator', (array) $current_user->roles, true ) ) {
 						?>
 						<li class="header-widget-menu-item_employer-dashboard">
 							<a href="<?php echo esc_url( get_permalink( $employer_dashboard ) ); ?>">
@@ -89,7 +88,7 @@ $role                = array_shift( $roles );
 
 				// Company Dashboard Link.
 				if ( cariera_wp_job_manager_is_activated() && cariera_wp_company_manager_is_activated() ) {
-					if ( in_array( 'employer', (array) $current_user->roles ) || in_array( 'administrator', (array) $current_user->roles ) ) {
+					if ( in_array( 'employer', (array) $current_user->roles, true ) || in_array( 'administrator', (array) $current_user->roles, true ) ) {
 						?>
 						<li class="header-widget-menu-item_company-dashboard">
 							<a href="<?php echo esc_url( get_permalink( $company_dashboard ) ); ?>">
@@ -102,7 +101,7 @@ $role                = array_shift( $roles );
 
 				// Candidate Dashboard Link.
 				if ( cariera_wp_job_manager_is_activated() && cariera_wp_resume_manager_is_activated() ) {
-					if ( in_array( 'candidate', (array) $current_user->roles ) || in_array( 'administrator', (array) $current_user->roles ) ) {
+					if ( in_array( 'candidate', (array) $current_user->roles, true ) || in_array( 'administrator', (array) $current_user->roles, true ) ) {
 						?>
 						<li class="header-widget-menu-item_candidate-dashboard">
 							<a href="<?php echo esc_url( get_permalink( $candidate_dashboard ) ); ?>">

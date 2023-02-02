@@ -4,7 +4,7 @@
  * @package Cariera
  *
  * @since    1.5.2
- * @version  1.5.3
+ * @version  1.6.3
  *
  * ========================
  * MAIN THEME SETUP
@@ -29,8 +29,6 @@ class Cariera_Setup {
 
 
 
-
-
 	/**
 	 * Allows for accessing single instance of class. Class should only be constructed once per call.
 	 *
@@ -45,8 +43,6 @@ class Cariera_Setup {
 
 
 
-
-
 	/**
 	 * Constructor function.
 	 *
@@ -58,10 +54,7 @@ class Cariera_Setup {
 		add_action( 'after_switch_theme', [ $this, 'switch_theme_settings' ] );
 		add_action( 'widgets_init', [ $this, 'widgets' ] );
 		add_filter( 'body_class', [ $this, 'body_class' ] );
-		add_action( 'wp_enqueue_scripts', [ $this, 'remove_unneeded_assets' ], 20 );
 	}
-
-
 
 
 
@@ -131,8 +124,6 @@ class Cariera_Setup {
 
 
 
-
-
 	/**
 	 * Add a pingback url auto-discovery header for single posts, pages, or attachments.
 	 *
@@ -144,8 +135,6 @@ class Cariera_Setup {
 			echo '<link rel="pingback" href="' . esc_url( get_bloginfo( 'pingback_url' ) ) . '">';
 		}
 	}
-
-
 
 
 
@@ -161,8 +150,6 @@ class Cariera_Setup {
 		update_option( 'resume_manager_enable_categories', 1 );
 		update_option( 'resume_manager_enable_skills', 1 );
 	}
-
-
 
 
 
@@ -302,8 +289,6 @@ class Cariera_Setup {
 
 
 
-
-
 	/**
 	 * Adding classes to the body
 	 *
@@ -319,42 +304,6 @@ class Cariera_Setup {
 		}
 
 		return $classes;
-	}
-
-
-
-
-
-	/**
-	 * Deregister/remove unneeded scripts & styles
-	 *
-	 * @since   1.3.0
-	 * @version 1.5.3
-	 */
-	public function remove_unneeded_assets() {
-		if ( wp_script_is( 'job-regions' ) ) {
-			wp_dequeue_script( 'job-regions' );
-		}
-
-		$styles = [
-			'wc-block-style',
-			'wp-job-manager-job-listings',
-			'wp-job-manager-resume-frontend',
-			'job-alerts-frontend',
-			'jm-application-deadline',
-			'wp-job-manager-applications-frontend',
-			'wc-paid-listings-packages',
-			'wp-job-manager-tags-frontend',
-			'wpjml-job-application',
-		];
-
-		foreach ( $styles as $style ) {
-			if ( wp_style_is( $style, 'enqueued' ) ) {
-				wp_dequeue_style( $style );
-			} elseif ( wp_style_is( $style, 'registered' ) ) {
-				wp_deregister_style( $style );
-			}
-		}
 	}
 
 }

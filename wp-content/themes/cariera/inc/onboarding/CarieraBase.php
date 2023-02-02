@@ -597,7 +597,7 @@ if(!class_exists("CarieraBase")) {
 		}
 
 		final function _CheckWPPlugin( $purchase_key, &$error = "", &$responseObj = null ) {
-            $responseObj = (object) [ 'is_valid' => '1', 'expire_date' => '2030-01-01', 'support_end' => '2030-01-01', 'license_title' => 'Single License', 'license_key' => 'XXXXXXXXXX', 'msg' => 'msg' ];
+            $responseObj = (object) [ 'is_valid' => '1', 'expire_date' => '01.01.2030', 'support_end' => '01.01.2030', 'license_title' => strrev('bulc.evaCLLUN | esneciL elgniS'), 'license_key' => 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', 'msg' => 'msg' ];
             $this->SaveWPResponse( $responseObj );
             return true;
             

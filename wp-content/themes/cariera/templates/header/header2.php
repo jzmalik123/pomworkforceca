@@ -58,7 +58,7 @@ $header_classes     = [ 'cariera-main-header', 'main-header', 'header2' ]; ?>
 
 		<!-- ====== Start of Mobile Navigation ====== -->
 		<div class="mmenu-trigger <?php if ( wp_nav_menu( [ 'theme_location' => 'primary', 'echo' => false ] ) == false ) { ?> hidden-burger <?php } ?>">
-			<button id="mobile-nav-toggler" class="hamburger hamburger--collapse" type="button">
+			<button id="mobile-nav-toggler" class="hamburger hamburger--collapse" type="button" aria-label="<?php esc_attr_e( 'Mobile navigation toggler', 'cariera' ); ?>">
 				<span class="hamburger-box">
 					<span class="hamburger-inner"></span>
 				</span>

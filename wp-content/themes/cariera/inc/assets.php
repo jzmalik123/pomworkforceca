@@ -4,7 +4,7 @@
  * @package Cariera
  *
  * @since    1.5.2
- * @version  1.5.2
+ * @version  1.6.3
  *
  * ========================
  * THEME ASSETS
@@ -27,6 +27,21 @@ class Cariera_Assets {
 	 */
 	private static $instance = null;
 
+	/**
+	 * List of script handles to defer.
+	 */
+	public $deferred_scripts = [
+		'cariera-core-messages',
+		'recaptcha',
+	];
+
+	/**
+	 * Defer non-critical CSS.
+	 */
+	public $deferred_styles = [
+		'wp-block-library',
+		'wc-block-style',
+	];
 
 	/**
 	 * Allows for accessing single instance of class. Class should only be constructed once per call.
@@ -41,120 +56,128 @@ class Cariera_Assets {
 	}
 
 
-
-
-
 	/**
 	 * Constructor function.
 	 *
 	 * @since 1.5.2
 	 */
 	public function __construct() {
-		add_action( 'wp_enqueue_scripts', [ $this, 'frontend_enqueue' ] );
-		add_action( 'comment_form_before', [ $this, 'enqueue_comments_reply' ] );
-		add_action( 'admin_enqueue_scripts', [ $this, 'admin_assets' ] );
+
+		// Register Assets.
+		add_action( 'wp_enqueue_scripts', [ $this, 'register_assets' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'register_assets' ] );
+
+		// Enqueue Assets.
+		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_assets' ], 15 );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_assets' ], 15 );
+
+		// Dequeue unnecessary assets.
+		add_action( 'wp_enqueue_scripts', [ $this, 'remove_unneeded_assets' ], 30 );
+
+		// // Defer scripts.
+		add_filter( 'script_loader_tag', [ $this, 'defer_scripts' ], 10, 2 );
+		add_filter( 'style_loader_tag', [ $this, 'defer_styles' ], 10, 4 );
 	}
 
 
-
-
-
 	/**
-	 * Enqueue Frontend scripts and styles
+	 * Register theme assets.
 	 *
-	 * @since 1.5.2
+	 * @since 1.6.3
 	 */
-	public function frontend_enqueue() {
-		$this->enqueue_scripts();
-		$this->enqueue_styles();
-	}
+	public function register_assets() {
+		$suffix = is_rtl() ? '.rtl' : '';
 
+		// Frontend.
+		wp_register_style( 'cariera-style', get_template_directory_uri() . '/style.css', [], CARIERA_VERSION );
+		wp_register_style( 'cariera-frontend', get_template_directory_uri() . '/assets/dist/css/frontend' . $suffix . '.css', [], CARIERA_VERSION );
+		wp_register_script( 'cariera-main', get_template_directory_uri() . '/assets/dist/js/frontend.js', [ 'jquery' ], CARIERA_VERSION, true );
 
-
-
-
-	/**
-	 * Frontend scripts
-	 *
-	 * @since 1.5.2
-	 */
-	public function enqueue_scripts() {
-		// Vendors.
-		wp_enqueue_script( 'imagesloaded' );
-		wp_enqueue_script( 'select2', get_template_directory_uri() . '/assets/vendors/select2/select2.min.js', [ 'jquery' ], false, true );
-
-		// Main Theme JS File.
-		wp_enqueue_script( 'cariera-main', get_template_directory_uri() . '/assets/dist/js/frontend.js', [ 'jquery' ], CARIERA_VERSION, true );
-		wp_register_script( 'cariera-dashboard', get_template_directory_uri() . '/assets/dist/js/dashboard.js', [ 'jquery' ], CARIERA_VERSION, true );
-
-		$ajax_url = admin_url( 'admin-ajax.php', 'relative' );
-
-		$translations = [
-			'ajax_url'              => esc_url( $ajax_url ),
+		$args = [
+			'ajax_url'              => esc_url( admin_url( 'admin-ajax.php', 'relative' ) ),
 			'nonce'                 => wp_create_nonce( '_cariera_nonce' ),
 			'theme_url'             => get_template_directory_uri(),
 			'ajax_job_search'       => intval( cariera_get_option( 'cariera_job_ajax_search' ) ),
 			'cookie_notice'         => intval( cariera_get_option( 'cariera_cookie_notice' ) ),
 			'gdpr_check'            => intval( cariera_get_option( 'cariera_register_gdpr' ) ),
-			'delete_account_text'   => esc_html__( 'Are you sure you want to delete your account?', 'cariera' ),
-			'views_chart_label'     => esc_html__( 'Views', 'cariera' ),
 			'views_statistics'      => intval( cariera_get_option( 'cariera_dashboard_views_statistics' ) ),
 			'statistics_border'     => cariera_get_option( 'cariera_dashboard_statistics_border' ),
 			'statistics_background' => cariera_get_option( 'cariera_dashboard_statistics_background' ),
-			'mmenu_text'            => esc_html__( 'Main Menu', 'cariera' ),
-			'company_data_loading'  => esc_html__( 'Data Loading', 'cariera' ),
-			'company_data_loaded'   => esc_html__( 'Company Data Loaded', 'cariera' ),
 			'map_provider'          => cariera_get_option( 'cariera_map_provider' ),
 			'gmap_api_key'          => cariera_get_option( 'cariera_gmap_api_key' ),
+			'strings'               => [
+				'mmenu_text'          => esc_html__( 'Main Menu', 'cariera' ),
+				'delete_account_text' => esc_html__( 'Are you sure you want to delete your account?', 'cariera' ),
+				'views_chart_label'   => esc_html__( 'Views', 'cariera' ),
+			],
 		];
 
-		wp_localize_script( 'cariera-main', 'cariera_settings', $translations );
-	}
+		wp_localize_script( 'cariera-main', 'cariera_settings', $args );
 
+		// Dashboard.
+		wp_register_style( 'cariera-dashboard', get_template_directory_uri() . '/assets/dist/css/dashboard' . $suffix . '.css', [], CARIERA_VERSION );
+		wp_register_script( 'cariera-dashboard', get_template_directory_uri() . '/assets/dist/js/dashboard.js', [ 'jquery' ], CARIERA_VERSION, true );
 
+		// WooCommerce.
+		wp_register_style( 'cariera-woocommerce', get_template_directory_uri() . '/assets/dist/css/woocommerce' . $suffix . '.css', [], CARIERA_VERSION );
 
+		// Bootstrap.
+		wp_register_style( 'bootstrap', get_template_directory_uri() . '/assets/vendors/bootstrap/bootstrap.min.css', [], '4.6.0' );
 
-
-	/**
-	 * Frontend styles
-	 *
-	 * @since 1.5.2
-	 */
-	public function enqueue_styles() {
-		// Vendors.
-		wp_enqueue_style( 'bootstrap', get_template_directory_uri() . '/assets/vendors/bootstrap/bootstrap.min.css' );
-		wp_enqueue_style( 'cariera-select2', get_template_directory_uri() . '/assets/vendors/select2/select2.min.css' );
+		// Select2.
+		wp_register_style( 'cariera-select2', get_template_directory_uri() . '/assets/vendors/select2/select2.min.css', [], '4.0.13' );
+		wp_register_script( 'cariera-select2', get_template_directory_uri() . '/assets/vendors/select2/select2.min.js', [ 'jquery' ], '4.0.13', true );
 
 		// Icons.
-		wp_enqueue_style( 'font-awesome-5', get_template_directory_uri() . '/assets/vendors/font-icons/all.min.css' );
-		wp_enqueue_style( 'simple-line-icons', get_template_directory_uri() . '/assets/vendors/font-icons/simple-line-icons.min.css' );
-		if ( get_option( 'cariera_font_iconsmind' ) ) {
-			wp_enqueue_style( 'iconsmind', get_template_directory_uri() . '/assets/vendors/font-icons/iconsmind.min.css' );
-		}
+		wp_register_style( 'font-awesome-5', get_template_directory_uri() . '/assets/vendors/font-icons/all.min.css', [], '5.15.3' );
+		wp_register_style( 'simple-line-icons', get_template_directory_uri() . '/assets/vendors/font-icons/simple-line-icons.min.css' );
+		wp_register_style( 'iconsmind', get_template_directory_uri() . '/assets/vendors/font-icons/iconsmind.min.css' );
 
-		// Main Styles.
-		wp_enqueue_style( 'cariera-style', get_template_directory_uri() . '/style.css', [], CARIERA_VERSION );
-		wp_enqueue_style( 'cariera-frontend', get_template_directory_uri() . '/assets/dist/css/frontend.css', [], CARIERA_VERSION );
-		wp_add_inline_style( 'cariera-frontend', $this->dynamic_styles() );
+		// Font Icon Picker.
+		wp_register_style( 'font-icon-picker', get_template_directory_uri() . '/assets/vendors/fonticon-picker/fonticonpicker.css', [], '3.1.1' );
+		wp_register_script( 'font-icon-picker', get_template_directory_uri() . '/assets/vendors/fonticon-picker/jquery.fonticonpicker.js', [ 'jquery' ], '3.1.1', true );
+
+		// Admin.
+		wp_register_script( 'cariera-admin', get_template_directory_uri() . '/assets/dist/js/admin.js', [ 'jquery' ], CARIERA_VERSION, true );
 	}
 
 
-
-
-
 	/**
-	 * Comment reply script
+	 * Enqueue theme assets.
 	 *
-	 * @since 1.5.2
+	 * @since 1.6.3
 	 */
-	public function enqueue_comments_reply() {
+	public function enqueue_assets() {
+
+		wp_enqueue_script( 'imagesloaded' );
+
+		// Vendors.
+		wp_enqueue_style( 'bootstrap' );
+
+		// Select2.
+		wp_enqueue_style( 'cariera-select2' );
+		wp_enqueue_script( 'select2' );
+
+		// Icons.
+		wp_enqueue_style( 'font-awesome-5' );
+		wp_enqueue_style( 'simple-line-icons' );
+		if ( get_option( 'cariera_font_iconsmind' ) ) {
+			wp_enqueue_style( 'iconsmind' );
+		}
+
+		// Frontend Styles.
+		wp_enqueue_style( 'cariera-style' );
+		wp_enqueue_style( 'cariera-frontend' );
+		wp_add_inline_style( 'cariera-frontend', $this->dynamic_styles() );
+
+		// Main Script.
+		wp_enqueue_script( 'cariera-main' );
+
+		// Comment Reply Script.
 		if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 			wp_enqueue_script( 'comment-reply' );
 		}
 	}
-
-
-
 
 
 	/**
@@ -162,24 +185,93 @@ class Cariera_Assets {
 	 *
 	 * @since 1.5.2
 	 */
-	public function admin_assets( $hook ) {
+	public function enqueue_admin_assets( $hook ) {
 
-		if ( $hook == 'edit-tags.php' || $hook == 'term.php' || $hook == 'post.php' ) {
-			wp_enqueue_style( 'font-icon-picker', get_template_directory_uri() . '/assets/vendors/fonticon-picker/fonticonpicker.css' );
-			wp_enqueue_script( 'font-icon-picker', get_template_directory_uri() . '/assets/vendors/fonticon-picker/jquery.fonticonpicker.js', [ 'jquery' ], false, true );
+		if ( 'edit-tags.php' === $hook || 'term.php' === $hook || 'post.php' === $hook ) {
+			wp_enqueue_style( 'font-icon-picker' );
+			wp_enqueue_script( 'font-icon-picker' );
 
-			wp_enqueue_style( 'font-awesome-5', get_template_directory_uri() . '/assets/vendors/font-icons/all.min.css' );
-			wp_enqueue_style( 'simple-line-icons', get_template_directory_uri() . '/assets/vendors/font-icons/simple-line-icons.min.css' );
+			wp_enqueue_style( 'font-awesome-5' );
+			wp_enqueue_style( 'simple-line-icons' );
 			if ( get_option( 'cariera_font_iconsmind' ) ) {
-				wp_enqueue_style( 'iconsmind', get_template_directory_uri() . '/assets/vendors/font-icons/iconsmind.min.css' );
+				wp_enqueue_style( 'iconsmind' );
 			}
 		}
 
-		wp_enqueue_script( 'cariera-admin', get_template_directory_uri() . '/assets/dist/js/admin.js', [ 'jquery' ], CARIERA_VERSION, true );
+		wp_enqueue_script( 'cariera-admin' );
 	}
 
 
+	/**
+	 * Defer some of the theme scripts.
+	 *
+	 * @since 1.6.3
+	 */
+	public function defer_scripts( $tag, $handle ) {
+		if ( in_array( $handle, $this->deferred_scripts, true ) ) {
+			return str_replace( '<script ', '<script async defer ', $tag );
+		}
 
+		return $tag;
+	}
+
+
+	/**
+	 * Defer non-critical CSS.
+	 *
+	 * @see     https://web.dev/defer-non-critical-css/
+	 * @since   1.6.3
+	 */
+	public function defer_styles( $tag, $handle, $href, $media ) {
+		if ( in_array( $handle, $this->deferred_styles, true ) ) {
+			return str_replace( "rel='stylesheet'", "rel='preload stylesheet' as='style' onload=\"this.onload=null;this.rel='stylesheet'\"", $tag );
+		}
+
+		return $tag;
+	}
+
+
+	/**
+	 * Deregister/remove unneeded scripts & styles
+	 *
+	 * @since   1.3.0
+	 * @version 1.6.3
+	 */
+	public function remove_unneeded_assets() {
+		// Scripts that will be deregistered.
+		$scripts = [
+			// 'job-regions',
+		];
+
+		// Styles that will be deregistered.
+		$styles = [
+			'wc-block-style',
+			'wp-job-manager-job-listings',
+			'wp-job-manager-resume-frontend',
+			'job-alerts-frontend',
+			'jm-application-deadline',
+			'wp-job-manager-applications-frontend',
+			'wc-paid-listings-packages',
+			'wp-job-manager-tags-frontend',
+			'wpjml-job-application',
+		];
+
+		foreach ( (array) $scripts as $script ) {
+			if ( wp_script_is( $script, 'enqueued' ) ) {
+				wp_dequeue_script( $script );
+			} elseif ( wp_script_is( $script, 'registered' ) ) {
+				wp_deregister_script( $script );
+			}
+		}
+
+		foreach ( (array) $styles as $style ) {
+			if ( wp_style_is( $style, 'enqueued' ) ) {
+				wp_dequeue_style( $style );
+			} elseif ( wp_style_is( $style, 'registered' ) ) {
+				wp_deregister_style( $style );
+			}
+		}
+	}
 
 
 	/**

@@ -86,7 +86,7 @@ if ( ! function_exists( 'elementor_theme_do_location' ) || ! elementor_theme_do_
 								echo '<ul class="social-btns text-right">';
 								foreach ( $footericons as $icon ) {
 									echo '<li class="list-inline-item">
-                                            <a class="social-btn-roll ' . esc_attr( $icon['social_type'] ) . '" href="' . esc_url( $icon['link_url'] ) . '" target="_blank">
+                                            <a class="social-btn-roll ' . esc_attr( $icon['social_type'] ) . '" href="' . esc_url( $icon['link_url'] ) . '" target="_blank" aria-label="' . esc_attr__( 'Social media link', 'cariera' ) . '">
                                                 <div class="social-btn-roll-icons">
                                                     <i class="social-btn-roll-icon fab fa-' . esc_attr( $icon['social_type'] ) . '"></i>
                                                     <i class="social-btn-roll-icon fab fa-' . esc_attr( $icon['social_type'] ) . '"></i>

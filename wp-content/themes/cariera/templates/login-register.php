@@ -163,7 +163,7 @@ if ( ! is_user_logged_in() ) {
 				$user_id         = get_current_user_id();
 				$user_img        = get_avatar( get_the_author_meta( 'ID', $user_id ), 150 );
 				$dashboard_title = get_page_by_title( 'Dashboard' );
-				$dashboard_page  = get_option( 'cariera_dashboard_page' );
+				$dashboard_page  = apply_filters( 'cariera_dashboard_page', get_option( 'cariera_dashboard_page' ) );
 
 				if ( $dashboard_page ) {
 					$account_link = get_permalink( $dashboard_page );

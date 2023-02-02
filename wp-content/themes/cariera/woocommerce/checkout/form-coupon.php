@@ -13,7 +13,7 @@
  * @see     https://docs.woocommerce.com/document/template-structure/
  * @author  WooThemes
  * @package WooCommerce/Templates
- * @version 3.4.4
+ * @version 7.0.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -24,22 +24,22 @@ if ( ! wc_coupons_enabled() ) {
 ?>
 
 <div class="woo-form-coupon">
-    <?php
-    if ( ! WC()->cart->applied_coupons ) {
-        $info_message = apply_filters( 'woocommerce_checkout_coupon_message', esc_html__( 'Have a coupon?', 'cariera' ) . ' <a href="#" class="showcoupon">' . esc_html__( 'Click here to enter your code', 'cariera' ) . '</a>' );
-        wc_print_notice( $info_message, 'notice' );
-    }
-    ?>
+	<?php
+	if ( ! WC()->cart->applied_coupons ) {
+		$info_message = apply_filters( 'woocommerce_checkout_coupon_message', esc_html__( 'Have a coupon?', 'cariera' ) . ' <a href="#" class="showcoupon">' . esc_html__( 'Click here to enter your code', 'cariera' ) . '</a>' );
+		wc_print_notice( $info_message, 'notice' );
+	}
+	?>
 
-    <form class="checkout_coupon" method="post" style="display:none">
-        <p class="form-row form-row-first">
-            <input type="text" name="coupon_code" class="input-text" placeholder="<?php esc_attr_e( 'Coupon code', 'cariera' ); ?>" id="coupon_code" value="" />
-        </p>
+	<form class="checkout_coupon" method="post" style="display:none">
+		<p class="form-row form-row-first">
+			<input type="text" name="coupon_code" class="input-text" placeholder="<?php esc_attr_e( 'Coupon code', 'cariera' ); ?>" id="coupon_code" value="" />
+		</p>
 
-        <p class="form-row form-row-last">            
-            <button type="submit" class="button btn btn-main btn-effect" name="apply_coupon" value="<?php esc_attr_e( 'Apply coupon', 'cariera' ); ?>"><?php esc_html_e( 'Apply coupon', 'cariera' ); ?></button>
-        </p>
+		<p class="form-row form-row-last">            
+			<button type="submit" class="button btn btn-main btn-effect<?php echo esc_attr( wc_wp_theme_get_element_class_name( 'button' ) ? ' ' . wc_wp_theme_get_element_class_name( 'button' ) : '' ); ?>" name="apply_coupon" value="<?php esc_attr_e( 'Apply coupon', 'cariera' ); ?>"><?php esc_html_e( 'Apply coupon', 'cariera' ); ?></button>
+		</p>
 
-        <div class="clear"></div>
-    </form>
+		<div class="clear"></div>
+	</form>
 </div>

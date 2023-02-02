@@ -63,7 +63,7 @@ if ( is_user_logged_in() ) { ?>
 					<a href="#login-register-popup" class="popup-with-zoom-anim btn btn-main btn-effect">
 					<?php
 				} else {
-					$login_registration_page     = get_option( 'cariera_login_register_page' );
+					$login_registration_page     = apply_filters( 'cariera_login_register_page', get_option( 'cariera_login_register_page' ) );
 					$login_registration_page_url = get_permalink( $login_registration_page );
 					?>
 

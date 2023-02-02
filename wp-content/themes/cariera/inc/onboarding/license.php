@@ -21,7 +21,6 @@ require_once get_template_directory() . '/inc/onboarding/CarieraBase.php';
 
 
 
-
 class Cariera_License {
 
 	public $plugin_file = __FILE__;
@@ -41,20 +40,21 @@ class Cariera_License {
 	 * @version 1.5.2
 	 */
 	public function __construct() {
-		$licenseKey  = get_option( 'Cariera_lic_Key', '' );
-		$liceEmail   = get_option( 'Cariera_lic_email', '' );
-		$templateDir = get_template_directory();
+		$licenseKey   = get_option( 'Cariera_lic_Key', '' );
+		$licenseEmail = get_option( 'Cariera_lic_email', '' );
+		$templateDir  = get_template_directory();
 
 		CarieraBase::addOnDelete(
 			function() {
 				$this->status = false;
 				delete_option( 'Cariera_lic_Key' );
 				delete_option( 'Cariera_lic_email' );
+				$this->deactivate_core_plugin();
 			}
 		);
 
 		// If license is active.
-		if ( CarieraBase::CheckWPPlugin( $licenseKey, $liceEmail, $this->licenseMessage, $this->responseObj, $templateDir . '/style.css' ) ) {
+		if ( CarieraBase::CheckWPPlugin( $licenseKey, $licenseEmail, $this->licenseMessage, $this->responseObj, $templateDir . '/style.css' ) ) {
 			$this->status = true;
 
 			add_action( 'cariera_onboarding_license', [ $this, 'Activated' ] );
@@ -62,7 +62,7 @@ class Cariera_License {
 			add_action( 'cariera_onboarding_license_sidebar', [ $this, 'sidebar_support_expired' ] );
 			add_action( 'admin_notices', [ $this, 'support_expired_notice' ] );
 
-		// If license is not active.
+			// If license is not active.
 		} else {
 			$this->status = false;
 
@@ -79,8 +79,6 @@ class Cariera_License {
 		}
 
 	}
-
-
 
 
 
@@ -104,8 +102,6 @@ class Cariera_License {
 
 
 
-
-
 	/**
 	 * License deactivation action
 	 *
@@ -123,8 +119,6 @@ class Cariera_License {
 
 		wp_safe_redirect( admin_url( 'admin.php?page=cariera_theme' ) );
 	}
-
-
 
 
 
@@ -170,8 +164,6 @@ class Cariera_License {
 
 
 
-
-
 	/**
 	 * License deactivation form
 	 *
@@ -198,8 +190,6 @@ class Cariera_License {
 
 
 
-
-
 	/**
 	 * License info
 	 *
@@ -217,7 +207,7 @@ class Cariera_License {
 				<span class="support-date"><?php echo esc_html( $this->responseObj->support_end ); ?></span>
 			</div>
 			<?php
-		// Support has expired.
+			// Support has expired.
 		} else {
 			?>
 			<div class="license-support expired">
@@ -229,8 +219,6 @@ class Cariera_License {
 			<?php
 		}
 	}
-
-
 
 
 
@@ -252,8 +240,6 @@ class Cariera_License {
 		</div>
 		<?php
 	}
-
-
 
 
 
@@ -279,7 +265,6 @@ class Cariera_License {
 
 
 
-
 	/**
 	 * Get activation status of the theme
 	 *
@@ -289,6 +274,19 @@ class Cariera_License {
 		$status = $this->status;
 
 		return $status;
+	}
+
+
+
+	/**
+	 * Deactivate Core plugin when deactivate theme license
+	 *
+	 * @since 1.6.3
+	 */
+	public function deactivate_core_plugin() {
+		if ( defined( 'CARIERA_PLUGIN_BASENAME' ) && is_plugin_active( CARIERA_PLUGIN_BASENAME ) ) {
+			deactivate_plugins( CARIERA_PLUGIN_BASENAME );
+		}
 	}
 
 }

@@ -8,7 +8,7 @@
  * @author      Automattic
  * @package     wp-job-manager
  * @category    Template
- * @version     1.33.0
+ * @version     1.38.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -37,6 +37,13 @@ do_action( 'job_manager_job_filters_before', $atts );
 			<div class="geolocation"><i class="geolocate"></i></div>
 		</div>
 
+		<?php if ( apply_filters( 'job_manager_job_filters_show_remote_position', get_option( 'job_manager_enable_remote_position', true ), $atts ) ) : ?>
+			<div class="search_remote_position checkbox">
+				<input type="checkbox" class="input-checkbox" name="remote_position" id="remote_position" placeholder="<?php esc_attr_e( 'Location', 'cariera' ); ?>" value="1" <?php checked( ! empty( $remote_position ) ); ?> />
+				<label for="remote_position" id="remote_position_label"><?php esc_html_e( 'Remote positions only', 'cariera' ); ?></label>
+			</div>
+		<?php endif; ?>
+
 		<?php do_action( 'cariera_wpjm_job_filters_search_radius' ); ?>
 
 		<!-- <div style="clear: both"></div> -->
@@ -49,21 +56,50 @@ do_action( 'job_manager_job_filters_before', $atts );
 			<div class="search_categories">
 				<label for="search_categories"><?php esc_html_e( 'Category', 'cariera' ); ?></label>
 				<?php if ( $show_category_multiselect ) : ?>
-					<?php job_manager_dropdown_categories( [ 'taxonomy' => 'job_listing_category', 'hierarchical' => 1, 'name' => 'search_categories', 'orderby' => 'name', 'selected' => $selected_category, 'hide_empty' => false, 'show_count' => 0, 'class' => 'cariera-select2-search' ] ); ?>
+					<?php
+					job_manager_dropdown_categories(
+						[
+							'taxonomy'     => 'job_listing_category',
+							'hierarchical' => 1,
+							'name'         => 'search_categories',
+							'orderby'      => 'name',
+							'selected'     => $selected_category,
+							'hide_empty'   => false,
+							'show_count'   => 0,
+							'class'        => 'cariera-select2-search',
+						]
+					);
+					?>
 				<?php else : ?>
-					<?php job_manager_dropdown_categories( [ 'taxonomy' => 'job_listing_category', 'hierarchical' => 1, 'show_option_all' => esc_html__( 'Any category', 'cariera' ), 'name' => 'search_categories', 'orderby' => 'name', 'selected' => $selected_category, 'multiple' => false, 'hide_empty' => false, 'show_count' => 0, 'class' => 'cariera-select2-search' ] ); ?>
+					<?php
+					job_manager_dropdown_categories(
+						[
+							'taxonomy'        => 'job_listing_category',
+							'hierarchical'    => 1,
+							'show_option_all' => esc_html__( 'Any category', 'cariera' ),
+							'name'            => 'search_categories',
+							'orderby'         => 'name',
+							'selected'        => $selected_category,
+							'multiple'        => false,
+							'hide_empty'      => false,
+							'show_count'      => 0,
+							'class'           => 'cariera-select2-search',
+						]
+					);
+					?>
 				<?php endif; ?>
 			</div>
 		<?php endif; ?>
 
-		<?php 
+		<?php
 		/**
 		 * Action for the custom search fields
 		 */
-		do_action( 'job_manager_job_filters_search_jobs_end', $atts ); ?>
+		do_action( 'job_manager_job_filters_search_jobs_end', $atts );
+		?>
 
 
-        <?php
+		<?php
 		/**
 		 * Show the submit button on the job filters form.
 		 *
@@ -72,7 +108,8 @@ do_action( 'job_manager_job_filters_before', $atts );
 		 * @param bool $show_submit_button Whether to show the button. Defaults to true.
 		 * @return bool
 		 */
-		if ( apply_filters( 'job_manager_job_filters_show_submit_button', true ) ) : ?>
+		if ( apply_filters( 'job_manager_job_filters_show_submit_button', true ) ) :
+			?>
 			<div class="search_submit">
 				<input type="submit" class="btn btn-main" value="<?php esc_attr_e( 'Search Jobs', 'cariera' ); ?>">
 			</div>

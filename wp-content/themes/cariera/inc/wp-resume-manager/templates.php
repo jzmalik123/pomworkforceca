@@ -472,7 +472,7 @@ add_action( 'single_resume_content', 'cariera_single_resume_v2_map', 41 );
  * Resume Submission Flow
  *
  * @since   1.3.2
- * @version 1.5.2
+ * @version 1.6.4
  */
 function cariera_resume_submission_flow() {
 	// Temporary variables.
@@ -480,7 +480,7 @@ function cariera_resume_submission_flow() {
 
 	// Get page IDs.
 	$current_page_id        = get_queried_object_id();
-	$resume_submission_page = intval( get_option( 'resume_manager_submit_resume_form_page_id', false ) );
+	$resume_submission_page = apply_filters( 'cariera_dashboard_resume_submit_page', get_option( 'resume_manager_submit_resume_form_page_id', false ) );
 
 	// Get resume packages.
 	if ( function_exists( 'wc_get_products' ) ) {
@@ -490,7 +490,7 @@ function cariera_resume_submission_flow() {
 	}
 
 	// Display submission flow.
-	if ( ! empty( $resume_submission_page ) && ( $resume_submission_page == $current_page_id ) ) {
+	if ( ! empty( $resume_submission_page ) && ( absint( $resume_submission_page ) === $current_page_id ) ) {
 		?>
 		<div class="submission-flow resume-submission-flow">
 			<ul>

@@ -4,7 +4,7 @@
  * @package Cariera
  *
  * @since    1.5.0
- * @version  1.5.4
+ * @version  1.6.4
  *
  * ========================
  * TEMPLATE FOR HEADER EXTRA
@@ -33,7 +33,7 @@ $login_registration = get_option( 'cariera_login_register_layout' ); ?>
 			?>
 
 			<div class="extra-menu-item extra-shop mini-cart woocommerce">
-				<a href="#shopping-cart-modal" class="cart-contents popup-with-zoom-anim">
+				<a href="#shopping-cart-modal" class="cart-contents popup-with-zoom-anim" aria-label="<?php esc_attr_e( 'Shopping cart modal trigger', 'cariera' ); ?>">
 					<i class="icon-bag"></i>
 					<span class="notification-count cart-count <?php echo esc_html( $cart_class ); ?>"><?php echo number_format_i18n( $cart_count ); ?></span>
 				</a>
@@ -47,7 +47,7 @@ $login_registration = get_option( 'cariera_login_register_layout' ); ?>
 	if ( cariera_get_option( 'header_quick_search' ) ) {
 		?>
 		<div class="extra-menu-item extra-search">
-			<a href="#quick-search-modal" class="header-search-btn popup-with-zoom-anim">
+			<a href="#quick-search-modal" class="header-search-btn popup-with-zoom-anim" aria-label="<?php esc_attr_e( 'Quick search trigger', 'cariera' ); ?>">
 				<i class="icon-magnifier" aria-hidden="true"></i>
 			</a>
 		</div>
@@ -71,7 +71,7 @@ $login_registration = get_option( 'cariera_login_register_layout' ); ?>
 						<?php
 					}
 				} else {
-					$login_registration_page     = get_option( 'cariera_login_register_page' );
+					$login_registration_page     = apply_filters( 'cariera_login_register_page', get_option( 'cariera_login_register_page' ) );
 					$login_registration_page_url = get_permalink( $login_registration_page );
 					?>
 

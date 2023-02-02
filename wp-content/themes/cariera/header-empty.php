@@ -19,7 +19,7 @@
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 
 	<!-- Mobile viewport optimized -->
-	<meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 
 	<link rel="profile" href="https://gmpg.org/xfn/11">
 	<link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>">

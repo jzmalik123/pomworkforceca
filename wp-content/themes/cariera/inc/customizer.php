@@ -1131,8 +1131,8 @@ function cariera_customize_settings() {
 
 			'cariera_job_ajax_search'                     => [
 				'type'        => 'switch',
-				'label'       => esc_html__( 'Job AJAX Search', 'cariera' ),
-				'description' => esc_html__( 'Turn the switch "off" to disable AJAX search. This works only for the search forms that are added via Elementor or WPBakery.', 'cariera' ),
+				'label'       => esc_html__( 'Job Search - Keyword Autocomplete', 'cariera' ),
+				'description' => esc_html__( 'Turn the switch "off" to disable job autocomplete AJAX search. This works only for the search forms that are added via Elementor.', 'cariera' ),
 				'section'     => 'job_options',
 				'default'     => true,
 				'priority'    => 10,

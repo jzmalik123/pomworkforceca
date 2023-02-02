@@ -44,7 +44,7 @@ class Cariera_Woocommerce {
 	 * @version 1.5.2
 	 */
 	public function enqueue_style() {
-		wp_enqueue_style( 'cariera-woocommerce', get_template_directory_uri() . '/assets/dist/css/woocommerce.css', [], CARIERA_VERSION );
+		wp_enqueue_style( 'cariera-woocommerce' );
 	}
 
 

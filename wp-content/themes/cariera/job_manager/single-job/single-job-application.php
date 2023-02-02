@@ -4,7 +4,7 @@
  * @package Cariera
  *
  * @since    1.5.5
- * @version  1.5.5
+ * @version  1.6.4
  *
  * ========================
  * SINGLE JOB - JOB APPLICATION
@@ -23,7 +23,7 @@ if ( ! candidates_can_apply() ) {
 
 $external_apply              = get_post_meta( $post->ID, '_apply_link', true );
 $login_registration          = get_option( 'cariera_login_register_layout' );
-$login_registration_page     = get_option( 'cariera_login_register_page' );
+$login_registration_page     = apply_filters( 'cariera_login_register_page', get_option( 'cariera_login_register_page' ) );
 $login_registration_page_url = get_permalink( $login_registration_page );
 
 if ( ! empty( $external_apply ) ) { ?>

@@ -32,7 +32,8 @@ if ( class_exists( 'WP_Job_Manager_Bookmarks' ) ) {
 /**
  * Bookmark button trigger
  *
- * @since 1.3.3
+ * @since 	1.3.3
+ * @version	1.6.4
  */
 function cariera_bookmark_trigger() {
 	if ( is_user_logged_in() ) {
@@ -43,7 +44,7 @@ function cariera_bookmark_trigger() {
 		if ( 'popup' === $login_registration ) {
 			echo '<a href="#login-register-popup" class="listing-bookmark btn btn-main btn-effect popup-with-zoom-anim">';
 		} else {
-			$login_registration_page     = get_option( 'cariera_login_register_page' );
+			$login_registration_page     = apply_filters( 'cariera_login_register_page', get_option( 'cariera_login_register_page' ) );
 			$login_registration_page_url = get_permalink( $login_registration_page );
 
 			echo '<a href="' . esc_url( $login_registration_page_url ) . '" class="listing-bookmark btn btn-main btn-effect">';

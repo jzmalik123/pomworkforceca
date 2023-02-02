@@ -4,7 +4,7 @@
  * @package Cariera
  *
  * @since    1.0.0
- * @version  1.6.2
+ * @version  1.6.4
  *
  * ========================
  * MAIN FUNCTION FILE
@@ -13,7 +13,7 @@
 
 update_option( 'Cariera_lic_Key', 'activated' );
 
-define( 'CARIERA_VERSION', '1.6.2' );
+define( 'CARIERA_VERSION', '1.6.4' );
 
 
 require get_template_directory() . '/inc/setup.php';
@@ -25,6 +25,7 @@ require get_template_directory() . '/inc/breadcrumb.php';
 require get_template_directory() . '/inc/dashboard.php';
 require get_template_directory() . '/inc/mega-menu.php';
 require get_template_directory() . '/inc/onboarding/onboarding.php';
+require get_template_directory() . '/inc/3rd-party/3rd-party.php';
 
 // Require only if wc is activated.
 if ( cariera_wc_is_activated() ) {

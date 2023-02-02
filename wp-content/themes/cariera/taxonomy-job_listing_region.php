@@ -4,7 +4,7 @@
  * @package Cariera
  *
  * @since   1.2.5
- * @version 1.5.0
+ * @version 1.6.3
  *
  * ========================
  * TAXONOMY FOR JOB LISTING REGIONS
@@ -12,6 +12,7 @@
  **/
 
 $taxonomy    = get_taxonomy( get_queried_object()->taxonomy );
+$term_id     = get_queried_object()->term_id;
 $layout      = cariera_get_option( 'cariera_job_taxonomy_layout' );
 $list_layout = cariera_get_option( 'cariera_job_taxonomy_list_version' );
 $grid_layout = cariera_get_option( 'cariera_job_taxonomy_grid_version' );
@@ -50,7 +51,7 @@ get_header(); ?>
 
 <main class="ptb80">
 	<div class="container">
-		<?php echo do_shortcode( '[jobs selected_region="' . get_query_var( 'job_listing_region' ) . '" per_page="10" ' . $taxonomy_layout . ']' ); ?>
+		<?php echo do_shortcode( '[jobs selected_region="' . $term_id . '" ' . $taxonomy_layout . ']' ); ?>
 	</div>
 </main>
 

@@ -25,8 +25,8 @@ if ( ! get_option( 'cariera_private_messages' ) ) {
 }
 ?>
 
-<div class="extra-menu-item extra-notifications">
-	<a href="#private-messages" class="popup-with-zoom-anim private-messages-trigger">
+<div class="extra-menu-item extra-messages">
+	<a href="#private-messages" class="popup-with-zoom-anim private-messages-trigger" aria-label="<?php esc_attr_e( 'Messages modal trigger', 'cariera' ); ?>">
 		<i class="icon-envelope"></i>
 
 		<span class="notification-count d-none"><?php echo esc_html( '0' ); ?></span>

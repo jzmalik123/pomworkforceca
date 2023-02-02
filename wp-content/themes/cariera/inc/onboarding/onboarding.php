@@ -81,8 +81,6 @@ class Cariera_Onboarding {
 
 
 
-
-
 	/**
 	 * Add admin menu page
 	 *
@@ -113,8 +111,6 @@ class Cariera_Onboarding {
 
 
 
-
-
 	/**
 	 * Loading scripts and styles for the onboarding
 	 *
@@ -127,8 +123,6 @@ class Cariera_Onboarding {
 
 
 
-
-
 	/**
 	 * Onboarding scripts
 	 *
@@ -136,7 +130,7 @@ class Cariera_Onboarding {
 	 */
 	public function load_scripts() {
 		wp_register_script( 'cariera-onboarding', get_template_directory_uri() . '/assets/dist/js/onboarding.js', [ 'jquery' ], CARIERA_VERSION, true );
-		wp_register_script( 'jquery-confirm', get_template_directory_uri() . '/assets/vendors/jquery-confirm/jquery-confirm.js', [ 'jquery' ], false, true );
+		wp_register_script( 'jquery-confirm', get_template_directory_uri() . '/assets/vendors/jquery-confirm/jquery-confirm.js', [ 'jquery' ], '3.2.0', true );
 
 		$tgma_url = self::$status ? $this->tgmpa->get_tgmpa_url() : '';
 
@@ -158,19 +152,17 @@ class Cariera_Onboarding {
 
 
 
-
-
 	/**
 	 * Onboarding styles
 	 *
 	 * @since 1.5.1
 	 */
 	public function load_styles() {
-		wp_register_style( 'cariera-onboarding', get_template_directory_uri() . '/assets/dist/css/onboarding.css', [], CARIERA_VERSION );
-		wp_register_style( 'jquery-confirm', get_template_directory_uri() . '/assets/vendors/jquery-confirm/jquery-confirm.css' );
+		$suffix = is_rtl() ? '.rtl' : '';
+
+		wp_register_style( 'cariera-onboarding', get_template_directory_uri() . '/assets/dist/css/onboarding' . $suffix . '.css', [], CARIERA_VERSION );
+		wp_register_style( 'jquery-confirm', get_template_directory_uri() . '/assets/vendors/jquery-confirm/jquery-confirm.css', [], '3.2.0' );
 	}
-
-
 
 
 
@@ -182,8 +174,6 @@ class Cariera_Onboarding {
 	public function page_template() {
 		require_once get_template_directory() . '/inc/onboarding/page.php';
 	}
-
-
 
 
 
@@ -203,8 +193,6 @@ class Cariera_Onboarding {
 
 
 
-
-
 	/**
 	 * Conditionally load TGMPA
 	 *
@@ -213,8 +201,6 @@ class Cariera_Onboarding {
 	public function load_tgmpa( $status ) {
 		return is_admin() || current_user_can( 'install_themes' );
 	}
-
-
 
 
 
@@ -253,8 +239,6 @@ class Cariera_Onboarding {
 		return $plugins;
 
 	}
-
-
 
 
 
@@ -338,8 +322,6 @@ class Cariera_Onboarding {
 
 		exit;
 	}
-
-
 
 
 
@@ -459,8 +441,6 @@ class Cariera_Onboarding {
 
 
 
-
-
 	/**
 	 * Plugins install page setup
 	 *
@@ -487,8 +467,6 @@ class Cariera_Onboarding {
 			return;
 		}
 	}
-
-
 
 
 

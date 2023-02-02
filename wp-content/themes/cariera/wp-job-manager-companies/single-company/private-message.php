@@ -4,7 +4,7 @@
  * @package Cariera
  *
  * @since    1.6.0
- * @version  1.6.0
+ * @version  1.6.4
  *
  * ========================
  * SINGLE COMPANY - PRIVATE MESSAGE TEMPLATE
@@ -38,7 +38,7 @@ if ( ! empty( $logo ) ) {
 		<?php echo ( get_the_author_meta( 'ID' ) === get_current_user_id() ) ? 'data-disabled="true"' : ''; ?> 
 		data-id="<?php echo esc_attr( get_the_ID() ); ?>" data-title="<?php echo esc_attr( get_the_title() ); ?>" 
 		data-image="<?php echo esc_url( $logo_img ); ?>" 
-		data-author="<?php echo get_the_author_meta( 'ID' ); ?>" 
+		data-author="<?php echo esc_attr( get_the_author_meta( 'ID' ) ); ?>" 
 		data-user-id="1">
 			<?php esc_html_e( 'Direct message', 'cariera' ); ?>
 		</a>
@@ -48,13 +48,15 @@ if ( ! empty( $logo ) ) {
 
 		if ( 'popup' === $login_registration ) {
 			$login_registration_page_url = '#login-register-popup';
+			$login_registration_class    = 'popup-with-zoom-anim';
 		} else {
-			$login_registration_page     = get_option( 'cariera_login_register_page' );
+			$login_registration_page     = apply_filters( 'cariera_login_register_page', get_option( 'cariera_login_register_page' ) );
 			$login_registration_page_url = get_permalink( $login_registration_page );
+			$login_registration_class    = '';
 		}
 		?>
 
-		<a href="<?php echo esc_url( $login_registration_page_url ); ?>" class="popup-with-zoom-anim btn btn-main listing-btn">
+		<a href="<?php echo esc_url( $login_registration_page_url ); ?>" class="btn btn-main listing-btn <?php echo esc_attr( $login_registration_class ); ?>">
 			<?php esc_html_e( 'Direct message', 'cariera' ); ?>
 		</a>
 	<?php } ?>
